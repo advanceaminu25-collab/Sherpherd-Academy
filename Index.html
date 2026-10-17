@@ -1,0 +1,277 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b46">
+  <title>Sherpherd Academy | School Management</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#">
+        <span class="brand-mark">
+          <span class="brand-mark-inner">S</span>
+        </span>
+        <span class="brand-copy">
+          <strong>Sherpherd</strong>
+          <small>ACADEMY</small>
+        </span>
+      </a>
+
+      <div class="school-switcher">
+        <div class="school-avatar">SA</div>
+        <div>
+          <strong>Sherpherd Academy</strong>
+          <small>School workspace</small>
+        </div>
+        <span class="chevron">⌄</span>
+      </div>
+
+      <nav class="navigation" aria-label="Main navigation">
+        <p class="nav-label">WORKSPACE</p>
+        <button class="nav-item active" data-page="overview">▦ Overview</button>
+        <button class="nav-item" data-page="students">♙ Students <span class="nav-count" id="studentNavCount">0</span></button>
+        <button class="nav-item" data-page="admissions">↗ Admissions</button>
+        <button class="nav-item" data-page="staff">♧ Staff &amp; teachers</button>
+        <button class="nav-item" data-page="attendance">✓ Attendance</button>
+
+        <p class="nav-label nav-label-spaced">ACADEMICS</p>
+        <button class="nav-item" data-page="classes">▤ Classes &amp; subjects</button>
+        <button class="nav-item" data-page="timetable">◷ Timetable</button>
+        <button class="nav-item" data-page="assignments">▧ Assignments</button>
+        <button class="nav-item" data-page="results">⌁ Exams &amp; results</button>
+
+        <p class="nav-label nav-label-spaced">SCHOOL OPERATIONS</p>
+        <button class="nav-item" data-page="fees">₦ Fees &amp; payments</button>
+        <button class="nav-item" data-page="announcements">◉ Announcements</button>
+        <button class="nav-item" data-page="settings">⚙ Settings</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="help-card">
+          <strong>Need a hand?</strong>
+          <p>Make your school day a little easier.</p>
+          <a href="mailto:advanceaminu25@gmail.com">Contact support ↗</a>
+        </div>
+
+        <div class="profile-mini">
+          <span class="avatar">AA</span>
+          <span class="profile-text">
+            <strong id="profileName">Academy Admin</strong>
+            <small>Administrator</small>
+          </span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menuToggle">☰</button>
+
+        <div class="breadcrumb">
+          <span>Workspace</span>
+          <span>/</span>
+          <strong id="breadcrumbCurrent">Overview</strong>
+        </div>
+
+        <div class="topbar-actions">
+          <label class="search-box">
+            <span>⌕</span>
+            <input id="globalSearch" type="search" placeholder="Search students...">
+          </label>
+          <span class="avatar avatar-small">AA</span>
+        </div>
+      </header>
+
+      <section class="content" id="pageContent">
+        <div class="welcome-row">
+          <div>
+            <p class="eyebrow" id="todayLabel">SCHOOL MANAGEMENT</p>
+            <h1>Welcome back, <span id="welcomeName">Admin</span> ✦</h1>
+            <p class="subheading">Here’s what’s happening at your school today.</p>
+          </div>
+          <div class="welcome-actions">
+            <button class="button button-secondary" id="exportStudents">↓ Export report</button>
+            <button class="button button-primary" id="addStudentTop">＋ Add student</button>
+          </div>
+        </div>
+
+        <div class="setup-notice" id="setupNotice">
+          <strong>Welcome to your school workspace</strong>
+          <p>This starter is running in demo mode. Connect Supabase to enable shared, secure school records.</p>
+          <button class="notice-close" id="dismissNotice">×</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span class="stat-label">Total students</span>
+            <div class="stat-value" id="totalStudents">0</div>
+            <small>Current register</small>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Teaching staff</span>
+            <div class="stat-value" id="totalStaff">0</div>
+            <small>Staff directory</small>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Attendance today</span>
+            <div class="stat-value" id="attendanceRate">—%</div>
+            <small id="attendanceDetail">No records yet</small>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Fees collected</span>
+            <div class="stat-value" id="feesCollected">₦0</div>
+            <small>This term</small>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>School overview</h2>
+                <p>Student enrolment at a glance</p>
+              </div>
+              <span class="chart-legend">● Enrolment</span>
+            </div>
+
+            <div class="chart-summary">
+              <strong id="chartStudentTotal">0</strong>
+              <span>Registered students</span>
+            </div>
+
+            <div class="chart" aria-label="Student enrolment chart">
+              <div class="chart-gridlines">
+                <i></i><i></i><i></i><i></i>
+              </div>
+              <svg viewBox="0 0 600 180" preserveAspectRatio="none">
+                <path d="M0 150 C55 140 65 120 120 125 S200 105 240 110 S310 72 360 88 S430 55 480 60 S550 30 600 24 L600 180 L0 180Z" fill="#eaf0ff"/>
+                <path d="M0 150 C55 140 65 120 120 125 S200 105 240 110 S310 72 360 88 S430 55 480 60 S550 30 600 24" fill="none" stroke="#4f7cff" stroke-width="3"/>
+              </svg>
+              <div class="chart-xlabels">
+                <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Quick actions</h2>
+                <p>Common tasks, one click away</p>
+              </div>
+            </div>
+
+            <div class="quick-actions">
+              <button class="quick-action" data-action="student">＋ <span><strong>Add a student</strong><small>Create a student profile</small></span></button>
+              <button class="quick-action" data-action="attendance">✓ <span><strong>Take attendance</strong><small>Record daily attendance</small></span></button>
+              <button class="quick-action" data-action="announcement">◉ <span><strong>Post announcement</strong><small>Share an update</small></span></button>
+              <button class="quick-action" data-action="payment">₦ <span><strong>Record a payment</strong><small>Log a school fee payment</small></span></button>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel students-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Recently added students</h2>
+              <p>Your latest student records</p>
+            </div>
+            <button class="text-button" data-page-link="students">View all students →</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>STUDENT</th>
+                  <th>STUDENT ID</th>
+                  <th>CLASS</th>
+                  <th>GUARDIAN</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+              <tbody id="recentStudentsBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <span>© <span id="yearNow"></span> Sherpherd Academy</span>
+          <span>Made for a brighter school day ✦</span>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">SCHOOL REGISTER</p>
+          <h2 id="modalTitle">Add student</h2>
+          <p>Create a new student profile.</p>
+        </div>
+        <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+      </div>
+
+      <form id="studentForm">
+        <div class="form-grid">
+          <label class="field">First name *
+            <input name="first_name" required maxlength="80" placeholder="e.g. Amina">
+          </label>
+          <label class="field">Last name *
+            <input name="last_name" required maxlength="80" placeholder="e.g. Yusuf">
+          </label>
+          <label class="field">Student ID
+            <input name="student_number" maxlength="30" placeholder="Auto-generated if blank">
+          </label>
+          <label class="field">Class / grade *
+            <select name="class_name" required>
+              <option value="">Select class</option>
+              <option>Nursery 1</option><option>Nursery 2</option>
+              <option>Primary 1</option><option>Primary 2</option>
+              <option>Primary 3</option><option>Primary 4</option>
+              <option>Primary 5</option><option>Primary 6</option>
+              <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+              <option>SSS 1</option><option>SSS 2</option><option>SSS 3</option>
+            </select>
+          </label>
+          <label class="field">Guardian name
+            <input name="guardian_name" maxlength="120">
+          </label>
+          <label class="field">Guardian phone
+            <input name="guardian_phone" type="tel" maxlength="30">
+          </label>
+          <label class="field">Date of birth
+            <input name="date_of_birth" type="date">
+          </label>
+          <label class="field">Admission date
+            <input name="admission_date" type="date">
+          </label>
+        </div>
+        <p class="form-message" id="formMessage"></p>
+        <div class="modal-actions">
+          <button type="button" class="button button-secondary" id="cancelStudent">Cancel</button>
+          <button type="submit" class="button button-primary">Save student →</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
